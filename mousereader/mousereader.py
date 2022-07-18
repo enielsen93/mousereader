@@ -174,9 +174,6 @@ class MouseResult:
         except:
             pass
 
-
-
-
 def readMJL(filename, job = -1):
     with open(filename,'r') as f:
         ltsFileTxt = f.read()
