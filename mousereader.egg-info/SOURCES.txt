@@ -1,3 +1,4 @@
+README.md
 setup.py
 mousereader/__init__.py
 mousereader/mousereader.py
