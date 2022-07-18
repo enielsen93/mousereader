@@ -162,7 +162,7 @@ class MouseResult:
             self.csv_txt = csv_file_read.read()
         try:
             import pandas as pd
-            self.dataframe = pd.read_csv(csv_file, sep=" {2,}", index_col = 0)
+            self.dataframe = pd.read_csv(csv_file, sep=" {2,}", index_col = 0, engine = 'python')
             self.dataframe.index = pd.to_datetime(self.dataframe.index)
         except Exception as e:
             import warnings
