@@ -1,0 +1,8 @@
+setup.py
+mousereader/__init__.py
+mousereader/mousereader.py
+mousereader.egg-info/PKG-INFO
+mousereader.egg-info/SOURCES.txt
+mousereader.egg-info/dependency_links.txt
+mousereader.egg-info/requires.txt
+mousereader.egg-info/top_level.txt
