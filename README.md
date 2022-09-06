@@ -9,6 +9,8 @@ python -m pip install https://github.com/enielsen93/mousereader/tarball/master
 
 ## Example:
 ```
+from mousereader import MouseResult
+
 files = ["C:\Offline\VOR_Status\VOR_Status_CDS100_CDS100.CRF",
             "C:\Offline\VOR_Status\VOR_Status_CDS20_CDS20.CRF",
             "C:\Offline\VOR_Status\VOR_Status_CDS5_CDS5.CRF",
