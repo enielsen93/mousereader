@@ -196,10 +196,8 @@ def readMJL(filename, job = -1):
     return [simStart,simEnd]
 
 if __name__ == "__main__":
-    files = ["C:\Offline\VOR_Status\VOR_Status_CDS100_CDS100.CRF",
-            "C:\Offline\VOR_Status\VOR_Status_CDS20_CDS20.CRF",
-            "C:\Offline\VOR_Status\VOR_Status_CDS5_CDS5.CRF",
-            "C:\Offline\VOR_Status\VOR_Status_CDS10_CDS10.CRF"]
+    files = [r"\\files\Projects\RWA2022N001XX\RWA2022N00174\Model\05_RESULTS\VOR_Status_CDS10_CDS10.CRF",
+            r"\\files\Projects\RWA2022N001XX\RWA2022N00174\Model\05_RESULTS\VOR_Status_CDS20_CDS20.CRF"]
 
     import matplotlib.pyplot as plt
 
