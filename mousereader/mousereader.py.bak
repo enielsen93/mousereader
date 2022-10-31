@@ -114,61 +114,65 @@ def readPRF(filename, MUIDs = [""], datatype = ""):
 
     return csvTxt, list(np.array(MUIDs)[MUIDs_order])
 
-def readCRF(filename, MUIDs = [""], datatype = ""): 
-    """Reads MOUSE PRF Files.
-        filename: PRF file path.
-        MUID: MUID of object.
-        datatype: Link_Q, Node_WL, Link_WL, Link_V"""
-    
-    if not type(MUIDs) == list and not type(MUIDs) == tuple:
-        MUIDs = [MUIDs]
-    
-    for year in reversed(range(2010,2025)):
-        if os.path.exists(r"C:\Program Files (x86)\DHI\%d\bin\m11extra.exe" % (year)):
-            break
-            
-    m11extraPath = r"C:\Program Files (x86)\DHI\%d\bin\m11extra.exe" % (year)
-    prfFile = filename
-    
-    m11Out = os.path.dirname(prfFile) + "\M11.OUT"
-    call([m11extraPath, prfFile])
-    
-    with open(m11Out,'r') as M11OUTFile:
-        txt = M11OUTFile.read()
-    # matches = re.findall(r"%s: +<([^>]+)>" % (datatype),txt)
-    
-    lines = ""
-    MUIDs_order = []
-    with open(m11Out,'r') as M11OUTFile:
-        for linei,line in enumerate(M11OUTFile):
-            try:
-                for MUID_i, MUID in enumerate(MUIDs):
-                    if len(re.findall("%s: +<%s>" % (datatype, MUID),line))>0:
-                        line = re.sub("^0","1",line)
-                        MUIDs_order.append(MUID_i)
-                lines += line
-            except Exception as e:
-                raise(e)
-    with open(m11Out.replace(".OUT",".IN"),'w') as M11INFile:
-        M11INFile.write(lines)
-        
-    csvFile = "%s.csv" % MUID
-    os.chdir(os.path.dirname(prfFile))
-    call([m11extraPath, prfFile, csvFile, "/NOHEADER"])
-    
-    with open(csvFile,'r') as csvFileRead:
-        csvTxt = csvFileRead.read()
-    try:
-        os.remove(csvFile)
-        os.remove("M11.IN")
-        os.remove("M11.OUT")
-    except:
-        pass
-
-    return csvTxt, list(np.array(MUIDs)[MUIDs_order])
-
 class MouseResult:
-    def __init__
+    def __init__(self, filename, MUIDs = [""], datatype = ""):
+        """Reads MOUSE PRF Files.
+                filename: PRF file path.
+                MUID: MUID of object.
+                datatype: Link_Q, Node_WL, Link_WL, Link_V"""
+        self.MUIDs = MUIDs
+        self.filename = filename
+        if not type(MUIDs) == list and not type(MUIDs) == tuple:
+            MUIDs = [MUIDs]
+
+        for year in reversed(range(2010, 2025)):
+            if os.path.exists(r"C:\Program Files (x86)\DHI\%d\bin\m11extra.exe" % (year)):
+                break
+
+        m11extraPath = r"C:\Program Files (x86)\DHI\%d\bin\m11extra.exe" % (year)
+        prfFile = filename
+
+        m11Out = os.path.dirname(prfFile) + "\M11.OUT"
+        call([m11extraPath, prfFile])
+
+        with open(m11Out, 'r') as M11OUTFile:
+            txt = M11OUTFile.read()
+        # matches = re.findall(r"%s: +<([^>]+)>" % (datatype),txt)
+
+        lines = ""
+        MUIDs_order = []
+        with open(m11Out, 'r') as M11OUTFile:
+            for linei, line in enumerate(M11OUTFile):
+                try:
+                    for MUID_i, MUID in enumerate(MUIDs):
+                        if len(re.findall("%s: +<%s>" % (datatype, MUID), line)) > 0:
+                            line = re.sub("^0", "1", line)
+                            MUIDs_order.append(MUID_i)
+                    lines += line
+                except Exception as e:
+                    raise (e)
+        with open(m11Out.replace(".OUT", ".IN"), 'w') as M11INFile:
+            M11INFile.write(lines)
+
+        csv_file = "%s.csv" % MUID
+        os.chdir(os.path.dirname(prfFile))
+        call([m11extraPath, prfFile, csv_file, "/NOHEADER"])
+
+        with open(csv_file, 'r') as csv_file_read:
+            self.csv_txt = csv_file_read.read()
+        try:
+            import pandas as pd
+            self.dataframe = pd.read_csv(csv_file, sep=" {2,}", index_col = 0, engine = 'python')
+            self.dataframe.index = pd.to_datetime(self.dataframe.index)
+        except Exception as e:
+            import warnings
+            warnings.warn("Pandas not installed")
+        try:
+            os.remove(csv_file)
+            os.remove("M11.IN")
+            os.remove("M11.OUT")
+        except:
+            pass
 
 def readMJL(filename, job = -1):
     with open(filename,'r') as f:
@@ -190,3 +194,17 @@ def readMJL(filename, job = -1):
         simStart = simStart[job-1]
         simEnd = simEnd[job-1]
     return [simStart,simEnd]
+
+if __name__ == "__main__":
+    files = [r"\\files\Projects\RWA2022N001XX\RWA2022N00174\Model\05_RESULTS\VOR_Status_CDS10_CDS10.CRF",
+            r"\\files\Projects\RWA2022N001XX\RWA2022N00174\Model\05_RESULTS\VOR_Status_CDS20_CDS20.CRF"]
+
+    import matplotlib.pyplot as plt
+
+    plt.figure()
+    for file in files:
+        mouse_result = MouseResult(file, r"Vinkel")
+        plt.step(mouse_result.dataframe.index, mouse_result.dataframe.values, label = file)
+    plt.legend()
+    plt.show()
+    print("break")
