@@ -145,20 +145,31 @@ class MouseResult:
 
         lines = u""
         self.MUIDs_order = []
-        with open(m11Out, 'r') as M11OUTFile:
-            for linei, line in enumerate(M11OUTFile):
-                try:
+        replace_first_digit = re.compile("^0")
+        get_muid = re.compile("<([^>]+)>")
+        if MUIDs == ["ALL"]:
+            with open(m11Out, 'r') as M11OUTFile:
+                i = 0
+                for linei, line in enumerate(M11OUTFile):
+                    line_uni = unicode(line, encoding='cp1252')
+                    if datatype in line_uni:
+                        line_uni = replace_first_digit.sub("1", line_uni)
+                        self.MUIDs_order.append(i)
+                        MUID = get_muid.findall(line)[0]
+                        self.MUIDs.append(MUID)
+                        i += 1
+                    lines += line_uni
+        else:
+            with open(m11Out, 'r') as M11OUTFile:
+                for linei, line in enumerate(M11OUTFile):
                     line_uni = unicode(line, encoding = 'cp1252')
                     for MUID_i, MUID in enumerate(MUIDs):
                         if "<%s>" % MUID in line_uni and datatype in line_uni:
-                            line = re.sub("^0", "1", line_uni)
+                            line_uni = re.sub("^0", "1", line_uni)
                             self.MUIDs_order.append(MUID_i)
-                    lines += line
-                except Exception as e:
-                    import warnings
-                    warnings.warn("Could not read %s" % line)
-                    self.MUIDs_order.append(None)
-        with open(m11Out.replace(".OUT", ".IN"), 'w') as M11INFile:
+                    lines += line_uni
+
+        with io.open(m11Out.replace(".OUT", ".IN"), 'w', encoding = 'cp1252') as M11INFile:
             M11INFile.write(lines)
 
         csv_file = "%s.csv" % MUID
