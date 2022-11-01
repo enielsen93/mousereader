@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='mousereader',
-    version='1.0.1',    
+    version='1.0.0',    
     description='Python Package for reading MOUSE result files',
     url='https://github.com/enielsen93/mousereader',
     author='Emil Nielsen',

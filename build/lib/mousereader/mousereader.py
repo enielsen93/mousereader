@@ -147,7 +147,8 @@ class MouseResult:
         self.MUIDs_order = []
         replace_first_digit = re.compile("^0")
         get_muid = re.compile("<([^>]+)>")
-        if MUIDs == ["ALL"]:
+        if self.MUIDs == ["ALL"]:
+            self.MUIDs = []
             with open(m11Out, 'r') as M11OUTFile:
                 i = 0
                 for linei, line in enumerate(M11OUTFile):
@@ -186,9 +187,10 @@ class MouseResult:
             import warnings
             warnings.warn("Pandas not installed")
         try:
-            os.remove(csv_file)
-            os.remove("M11.IN")
-            os.remove("M11.OUT")
+            pass
+            # os.remove(csv_file)
+            # os.remove("M11.IN")
+            # os.remove("M11.OUT")
         except:
             pass
 
