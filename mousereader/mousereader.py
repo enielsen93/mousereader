@@ -137,7 +137,7 @@ class MouseResult:
         prfFile = filename
 
         m11Out = os.path.dirname(prfFile) + "\M11.OUT"
-        call([m11extraPath, prfFile])
+        call([m11extraPath, res1d])
 
         # with io.open(m11Out, 'r', encoding = "cp1252") as M11OUTFile:
         #     txt = unicode(M11OUTFile.read())
